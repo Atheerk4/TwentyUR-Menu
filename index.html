@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو تونتي يو ار</title>
+    <!-- استدعاء خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- استدعاء مكتبات React و Tailwind -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #000; margin: 0; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- الأيقونات (تم دمجها لتعمل كملف واحد بدون روابط خارجية) ---
+        const User = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
+        const Globe = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>;
+        const ChevronDown = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>;
+        const Truck = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>;
+        const Star = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
+        const MapPin = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>;
+        const ShoppingBag = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>;
+        const XIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+
+        // --- الألوان المتطابقة مع الهوية ---
+        const THEME = {
+            beige: '#F0ECE1',    
+            olive: '#6B7A57',    
+            darkText: '#1A2012', 
+            blackBtn: '#000000', 
+            white: '#FFFFFF',
+        };
+
+        const CATEGORIES = [
+            'مشروبات حارة',
+            'القهوة المقطرة',
+            'مشروبات مثلجة',
+            'المخبوزات',
+            'حلى وكعك'
+        ];
+
+        const MENU_ITEMS = [
+            { id: 101, name: 'إسبريسو', description: 'استمتع برشفة مركزة من النكهة الصافية قهوة تحاكي الذوق الرفيع', price: 11, calories: 3, category: 'مشروبات حارة', image: '101.jpg' },
+            { id: 102, name: 'أمريكانو', description: 'قهوة سوداء كلاسيكية', price: 14, calories: 470, category: 'مشروبات حارة', image: '102.jpg' },
+            { id: 103, name: 'كابتشينو', description: '', price: 15, calories: 100, category: 'مشروبات حارة', image: '103.jpg' },
+            { id: 104, name: 'لاتيه', description: '', price: 15, calories: 240, category: 'مشروبات حارة', image: '104.jpg' },
+            { id: 105, name: 'كورتادو', description: '', price: 14, calories: 120, category: 'مشروبات حارة', image: '105.jpg' },
+            { id: 1, name: 'قهوة حار V60', description: 'قهوة مختصة مقطرة ساخنة', price: 15, calories: 13, category: 'القهوة المقطرة', image: '1.jpg' },
+            { id: 2, name: 'قهوة V60 بارد', description: 'قهوة مختصة مقطرة باردة', price: 16, calories: 13, category: 'القهوة المقطرة', image: '2.jpg' },
+            { id: 3, name: 'قهوة اليوم حارة', description: 'محضرة طازجة من محاصيلنا المختارة', price: 9, calories: null, category: 'القهوة المقطرة', image: '3.jpg' },
+            { id: 4, name: 'قهوة اليوم بارد', description: 'قهوة اليوم المحضرة باردة', price: 9, calories: null, category: 'القهوة المقطرة', image: '4.jpg' },
+            { id: 8, name: 'سبانش لاتيه بارد', description: '', price: 15, calories: 240, category: 'مشروبات مثلجة', image: '8.jpg' },
+            { id: 9, name: 'سولتد كراميل بارد', description: '', price: 16, calories: 248, category: 'مشروبات مثلجة', image: '9.jpg' },
+            { id: 15, name: 'فرنش توست شوكلت بلجيكي', description: 'فرنش توست غني بالشوكولاتة البلجيكية', price: 21, calories: 375, category: 'المخبوزات', image: '15.jpg' },
+            { id: 16, name: 'مكعب فرنش توست بالكاسترد', description: 'قطعة بريوش محمرة ومقرمشة ومفرغة من الداخل، محشوة بكريم باتيسيير غني ومزينة بالتوت الطازج.', price: 28, calories: null, category: 'المخبوزات', image: '16.jpg' },
+            { id: 17, name: 'كرواسون اللوز', description: 'كروسان لوز هش محشو بكريمة لوز غنية ومزين برقائق اللوز', price: 14, calories: null, category: 'المخبوزات', image: '17.jpg' },
+            { id: 18, name: 'بان او سويس شوكولاتة', description: 'معجنات فرنسية تقليدية محشوة بكاسترد ناعم', price: 13, calories: null, category: 'المخبوزات', image: '18.jpg' },
+            { id: 19, name: 'دانيش التين والبيكان', description: '', price: 16, calories: null, category: 'المخبوزات', image: '19.jpg' },
+            { id: 20, name: 'تشيز كيك مدريد', description: 'مخبوز بلون ذهبي على قاعدة بسكوت', price: 24, calories: 340, category: 'حلى وكعك', image: '20.jpg' },
+            { id: 21, name: 'ماتيلدا كلاسيك', description: 'كعكة الشوكولاتة اللذيذة غنيّة بقوام رطب وناعم', price: 20, calories: 544, category: 'حلى وكعك', image: '21.jpg' },
+            { id: 22, name: 'تشيز كيك تمر وبيكان', description: 'مخبوز مع توفي وبيكان. يقدم وهو حار مع سايد آيس كريم.', price: 27, calories: null, category: 'حلى وكعك', image: '22.jpg' },
+            { id: 23, name: 'كيكة البيكان الفاخرة', description: 'كيكة هشة غنية بالزبدة والبيكان مع طبقة كريمة مخملية ومغلفة بكرانشي البيكان المحمص.', price: 28, calories: null, category: 'حلى وكعك', image: '23.jpg' },
+            { id: 24, name: 'تشيز كيك مغطى بالشوكولاتة', description: 'تشيز كيك غني وكريمي، مغطى بالكامل بطبقة من الشوكولاتة الصلبة تتكسر "طقطقة" بالشوكة.', price: 26, calories: null, category: 'حلى وكعك', image: '24.jpg' },
+            { id: 30, name: 'كيكة الدولتشي', description: 'كيكة رطبة تذوب في الفم، تتداخل فيها طبقات الكيك المشرب بمرارة القهوة وحلاوة الكراميل.', price: 29, calories: null, category: 'حلى وكعك', image: '30.jpg' },
+            { id: 25, name: 'تشيز كيك تيراميسو', description: 'قوام كريمي غني ومتماسك على قاعدة بسكويت كلاسيكية.', price: 26, calories: null, category: 'حلى وكعك', image: '25.jpg' },
+            { id: 26, name: 'لوف كيك الماربل', description: '', price: 10, calories: 460, category: 'حلى وكعك', image: '26.jpg' },
+            { id: 27, name: 'لوف كيك التوت', description: '', price: 10, calories: 400, category: 'حلى وكعك', image: '27.jpg' },
+            { id: 28, name: 'كوكيز', description: '', price: 13, calories: 380, category: 'حلى وكعك', image: '28.jpg' },
+            { id: 29, name: 'فكتوريا كيك', description: '', price: 20, calories: 320, category: 'حلى وكعك', image: '29.jpg' }
+        ];
+
+        function App() {
+            const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
+            const [cart, setCart] = useState({});
+            const [isCartOpen, setIsCartOpen] = useState(false);
+            const pillsContainerRef = useRef(null);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    const headerOffset = 180; 
+                    let currentActive = CATEGORIES[0];
+
+                    for (const cat of CATEGORIES) {
+                        const element = document.getElementById(`section-${cat}`);
+                        if (element) {
+                            const rect = element.getBoundingClientRect();
+                            if (rect.top <= headerOffset + 50) {
+                                currentActive = cat;
+                            }
+                        }
+                    }
+
+                    if (activeCategory !== currentActive) {
+                        setActiveCategory(currentActive);
+                        const pillElement = document.getElementById(`pill-${currentActive}`);
+                        if (pillElement && pillsContainerRef.current) {
+                            pillElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                };
+
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [activeCategory]);
+
+            const scrollToCategory = (cat) => {
+                setActiveCategory(cat);
+                const element = document.getElementById(`section-${cat}`);
+                const headerOffset = 160; 
+                
+                if (element) {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            };
+
+            const updateCart = (item, change) => {
+                setCart((prev) => {
+                    const currentQty = prev[item.id]?.quantity || 0;
+                    const newQty = currentQty + change;
+                    if (newQty <= 0) {
+                        const newCart = { ...prev };
+                        delete newCart[item.id];
+                        return newCart;
+                    }
+                    return { ...prev, [item.id]: { ...item, quantity: newQty } };
+                });
+            };
+
+            const cartItemsCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            const cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // دالة قراءة الصورة مباشرة من نفس المجلد
+            const getImageUrl = (imagePath) => {
+                return imagePath; 
+            };
+
+            return (
+                <div className="text-[#1A2012] selection:bg-[#6B7A57] selection:text-white pb-10">
+                    <div className="max-w-md mx-auto relative min-h-screen flex flex-col bg-[#F0ECE1] shadow-xl overflow-hidden">
+                        
+                        {/* --- الهيدر --- */}
+                        <header className="pt-8 px-5 flex flex-col relative z-0">
+                            <div className="flex justify-start">
+                                <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shadow-sm border-2 border-[#F0ECE1] bg-[#6B7A57]">
+                                    <img 
+                                        src={getImageUrl('0.jpg')} 
+                                        alt="شعار" 
+                                        className="w-full h-full object-cover" 
+                                        // تم وضع هذا السطر لإخفاء الصورة إذا لم تكن موجودة بعد
+                                        onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'; }}
+                                    />
+                                </div>
+                            </div>
+
+                            <h1 className="text-[4rem] font-black text-center mt-2 tracking-tighter text-[#6B7A57]">
+                                تونتي يو ار
+                            </h1>
+
+                            <div className="flex justify-end mt-4 items-center gap-1.5 font-bold text-sm">
+                                <ChevronDown size={16} />
+                                <span>Arabic</span>
+                                <Globe size={16} />
+                            </div>
+
+                            <div className="text-center mt-6 flex flex-col items-center">
+                                <div className="text-xl font-bold flex items-center gap-2 text-[#6B7A57]">
+                                    <ChevronDown size={20} />
+                                    تونتي يو ار
+                                </div>
+                                <div className="flex justify-center gap-6 mt-4 mb-8 text-black">
+                                    <Truck size={22} fill="currentColor" />
+                                    <Star size={22} fill="currentColor" />
+                                    <MapPin size={22} fill="currentColor" />
+                                </div>
+                            </div>
+                        </header>
+
+                        {/* --- شريط التصنيفات --- */}
+                        <div className="sticky top-0 z-30 pt-4 pb-4 px-5 border-b border-black/5 bg-[#F0ECE1]">
+                            <div ref={pillsContainerRef} className="flex gap-2.5 overflow-x-auto hide-scrollbar whitespace-nowrap scroll-smooth pb-1">
+                                {CATEGORIES.map((cat) => {
+                                    const isActive = activeCategory === cat;
+                                    return (
+                                        <button
+                                            key={cat}
+                                            id={`pill-${cat}`}
+                                            onClick={() => scrollToCategory(cat)}
+                                            className="px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shrink-0"
+                                            style={{ 
+                                                backgroundColor: isActive ? THEME.olive : THEME.blackBtn,
+                                                color: isActive ? THEME.darkText : THEME.white,
+                                            }}
+                                        >
+                                            {cat}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* --- قائمة المنتجات --- */}
+                        <main className="flex-1 rounded-t-[2.5rem] px-5 pt-8 pb-32 z-20 relative mt-4 bg-[#6B7A57]">
+                            <div className="w-12 h-1 rounded-full mx-auto mb-10 bg-black opacity-30"></div>
+
+                            <div className="space-y-16">
+                                {CATEGORIES.map((category) => {
+                                    const categoryItems = MENU_ITEMS.filter(item => item.category === category);
+                                    if (categoryItems.length === 0) return null;
+
+                                    return (
+                                        <section key={category} id={`section-${category}`} className="scroll-mt-48">
+                                            <h2 className="text-[1.6rem] font-bold mb-8 pr-1 text-[#1A2012]">
+                                                {category}
+                                            </h2>
+
+                                            <div className="space-y-10">
+                                                {categoryItems.map((item) => {
+                                                    const qty = cart[item.id]?.quantity || 0;
+                                                    return (
+                                                        <div key={item.id} className="flex items-start justify-between gap-4">
+                                                            {/* التفاصيل */}
+                                                            <div className="flex-1 pt-1 flex flex-col h-full">
+                                                                <h3 className="text-xl font-bold mb-1 text-[#1A2012]">{item.name}</h3>
+                                                                {item.description && <p className="text-[13px] leading-snug mb-3 opacity-80 font-medium text-[#1A2012]">{item.description}</p>}
+                                                                {item.calories && <p className="text-[13px] mb-4 font-bold text-[#1A2012]">{item.calories} سعرة حرارية</p>}
+                                                                
+                                                                <div className="mt-auto pt-2">
+                                                                    {qty === 0 ? (
+                                                                        <button onClick={() => updateCart(item, 1)} className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[0.4rem] font-bold shadow-sm active:scale-95 transition-transform text-black">
+                                                                            <span className="text-xs pt-0.5 opacity-80">﷼</span>
+                                                                            <span className="font-sans text-[15px]">{item.price}.00</span>
+                                                                        </button>
+                                                                    ) : (
+                                                                        <div className="inline-flex items-center gap-4 bg-white rounded-[0.4rem] p-1 px-2 shadow-sm">
+                                                                            <button onClick={() => updateCart(item, 1)} className="w-6 h-6 flex items-center justify-center font-bold text-lg text-black">+</button>
+                                                                            <span className="font-bold text-sm text-black w-4 text-center">{qty}</span>
+                                                                            <button onClick={() => updateCart(item, -1)} className="w-6 h-6 flex items-center justify-center font-bold text-lg text-black">-</button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                            {/* الصورة */}
+                                                            <div className="w-28 h-28 rounded-[2rem] overflow-hidden shrink-0 shadow-sm bg-white/30 flex items-center justify-center text-black/40 text-xs font-bold">
+                                                                <img 
+                                                                    src={getImageUrl(item.image)} 
+                                                                    alt={item.name} 
+                                                                    className="w-full h-full object-cover"
+                                                                    loading="lazy" 
+                                                                    onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = 'بدون صورة'; }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </section>
+                                    );
+                                })}
+                            </div>
+                        </main>
+
+                        {/* --- زر السلة العائم --- */}
+                        {cartItemsCount > 0 && (
+                            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-[380px] z-40">
+                                <button onClick={() => setIsCartOpen(true)} className="w-full text-white p-4 rounded-2xl flex items-center justify-between shadow-2xl active:scale-95 transition-transform bg-black">
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative">
+                                            <ShoppingBag size={24} />
+                                            <span className="absolute -top-1.5 -right-1.5 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-black bg-[#6B7A57] text-[#1A2012]">
+                                                {cartItemsCount}
+                                            </span>
+                                        </div>
+                                        <span className="font-bold">عرض السلة</span>
+                                    </div>
+                                    <div className="font-bold text-lg font-sans">{cartTotal}.00 ﷼</div>
+                                </button>
+                            </div>
+                        )}
+
+                        {/* --- نافذة السلة --- */}
+                        {isCartOpen && (
+                            <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm">
+                                <div className="w-full max-w-md mx-auto rounded-t-[2.5rem] min-h-[50vh] max-h-[85vh] flex flex-col bg-[#F0ECE1]">
+                                    <div className="flex items-center justify-between p-6 border-b border-black/10">
+                                        <h2 className="font-bold text-xl flex items-center gap-2 text-[#1A2012]">سلة الطلبات</h2>
+                                        <button onClick={() => setIsCartOpen(false)} className="p-2 bg-black/5 rounded-full text-black"><XIcon size={20} /></button>
+                                    </div>
+
+                                    <div className="p-6 flex-1 overflow-y-auto space-y-5">
+                                        {Object.values(cart).map((item) => (
+                                            <div key={item.id} className="flex items-center gap-4 border-b border-black/5 pb-5">
+                                                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-black/5 flex items-center justify-center text-[10px] text-black/40">
+                                                    <img src={getImageUrl(item.image)} alt={item.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = 'بدون صورة'; }}/>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-bold text-sm text-[#1A2012]">{item.name}</h4>
+                                                    <div className="font-bold text-sm mt-1 font-sans text-[#6B7A57]">{item.price * item.quantity} ﷼</div>
+                                                </div>
+                                                <div className="flex items-center gap-2 bg-white rounded-xl p-1 border border-black/5">
+                                                    <button onClick={() => updateCart(item, 1)} className="w-7 h-7 flex items-center justify-center font-bold">+</button>
+                                                    <span className="font-bold text-xs w-3 text-center">{item.quantity}</span>
+                                                    <button onClick={() => updateCart(item, -1)} className="w-7 h-7 flex items-center justify-center font-bold">-</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="p-6 border-t border-black/10 rounded-t-3xl pb-8 bg-[#6B7A57]">
+                                        <div className="flex justify-between items-center mb-5 px-2 text-[#1A2012]">
+                                            <span className="font-bold">المجموع النهائي</span>
+                                            <span className="font-extrabold text-2xl font-sans">{cartTotal} ﷼</span>
+                                        </div>
+                                        <button onClick={() => alert('تم تأكيد الطلب بنجاح!')} className="w-full text-white font-bold py-4 rounded-2xl flex items-center justify-center text-lg active:scale-95 bg-black">
+                                            تأكيد وإرسال الطلب
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
