@@ -24,7 +24,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- الأيقونات (تم دمجها لتعمل كملف واحد بدون روابط خارجية) ---
+        // --- الأيقونات ---
         const User = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
         const Globe = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>;
         const ChevronDown = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>;
@@ -87,13 +87,17 @@
             const [isCartOpen, setIsCartOpen] = useState(false);
             const pillsContainerRef = useRef(null);
 
+            // دالة لتنظيف وتوحيد أسماء الأقسام كمعرفات (IDs)
+            const getValidId = (text) => text.replace(/\s+/g, '-');
+
             useEffect(() => {
                 const handleScroll = () => {
                     const headerOffset = 180; 
                     let currentActive = CATEGORIES[0];
 
                     for (const cat of CATEGORIES) {
-                        const element = document.getElementById(`section-${cat}`);
+                        const sectionId = `section-${getValidId(cat)}`;
+                        const element = document.getElementById(sectionId);
                         if (element) {
                             const rect = element.getBoundingClientRect();
                             if (rect.top <= headerOffset + 50) {
@@ -104,7 +108,8 @@
 
                     if (activeCategory !== currentActive) {
                         setActiveCategory(currentActive);
-                        const pillElement = document.getElementById(`pill-${currentActive}`);
+                        const pillId = `pill-${getValidId(currentActive)}`;
+                        const pillElement = document.getElementById(pillId);
                         if (pillElement && pillsContainerRef.current) {
                             pillElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                         }
@@ -115,9 +120,11 @@
                 return () => window.removeEventListener('scroll', handleScroll);
             }, [activeCategory]);
 
+            // التنقل السلس عند الضغط على الأزرار
             const scrollToCategory = (cat) => {
                 setActiveCategory(cat);
-                const element = document.getElementById(`section-${cat}`);
+                const sectionId = `section-${getValidId(cat)}`;
+                const element = document.getElementById(sectionId);
                 const headerOffset = 160; 
                 
                 if (element) {
@@ -143,25 +150,21 @@
             const cartItemsCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
             const cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-            // دالة قراءة الصورة مباشرة من نفس المجلد
-            const getImageUrl = (imagePath) => {
-                return imagePath; 
-            };
-
             return (
                 <div className="text-[#1A2012] selection:bg-[#6B7A57] selection:text-white pb-10">
-                    <div className="max-w-md mx-auto relative min-h-screen flex flex-col bg-[#F0ECE1] shadow-xl overflow-hidden">
+                    <div className="max-w-md mx-auto relative min-h-screen flex flex-col bg-[#F0ECE1] shadow-xl overflow-x-hidden">
                         
                         {/* --- الهيدر --- */}
                         <header className="pt-8 px-5 flex flex-col relative z-0">
                             <div className="flex justify-start">
-                                <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shadow-sm border-2 border-[#F0ECE1] bg-[#6B7A57]">
+                                <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shadow-sm border-2 border-[#F0ECE1] bg-[#6B7A57] relative">
+                                    {/* نص الشعار في حال عدم وجود الصورة */}
+                                    <span className="absolute text-sm font-bold text-white z-0">شعار</span>
                                     <img 
-                                        src={getImageUrl('0.jpg')} 
+                                        src="0.jpg" 
                                         alt="شعار" 
-                                        className="w-full h-full object-cover" 
-                                        // تم وضع هذا السطر لإخفاء الصورة إذا لم تكن موجودة بعد
-                                        onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'; }}
+                                        className="w-full h-full object-cover relative z-10" 
+                                        onError={(e) => { e.target.style.opacity = '0'; }}
                                     />
                                 </div>
                             </div>
@@ -194,10 +197,11 @@
                             <div ref={pillsContainerRef} className="flex gap-2.5 overflow-x-auto hide-scrollbar whitespace-nowrap scroll-smooth pb-1">
                                 {CATEGORIES.map((cat) => {
                                     const isActive = activeCategory === cat;
+                                    const pillId = `pill-${getValidId(cat)}`;
                                     return (
                                         <button
                                             key={cat}
-                                            id={`pill-${cat}`}
+                                            id={pillId}
                                             onClick={() => scrollToCategory(cat)}
                                             className="px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shrink-0"
                                             style={{ 
@@ -220,9 +224,10 @@
                                 {CATEGORIES.map((category) => {
                                     const categoryItems = MENU_ITEMS.filter(item => item.category === category);
                                     if (categoryItems.length === 0) return null;
+                                    const sectionId = `section-${getValidId(category)}`;
 
                                     return (
-                                        <section key={category} id={`section-${category}`} className="scroll-mt-48">
+                                        <section key={category} id={sectionId} className="scroll-mt-48">
                                             <h2 className="text-[1.6rem] font-bold mb-8 pr-1 text-[#1A2012]">
                                                 {category}
                                             </h2>
@@ -254,14 +259,19 @@
                                                                 </div>
                                                             </div>
 
-                                                            {/* الصورة */}
-                                                            <div className="w-28 h-28 rounded-[2rem] overflow-hidden shrink-0 shadow-sm bg-white/30 flex items-center justify-center text-black/40 text-xs font-bold">
+                                                            {/* الصورة الذكية التي تظهر الرقم إذا لم توجد الصورة */}
+                                                            <div className="w-28 h-28 rounded-[2rem] overflow-hidden shrink-0 shadow-sm bg-white/40 border border-black/5 relative flex items-center justify-center">
+                                                                {/* الرقم الشفاف يظهر في الخلفية */}
+                                                                <span className="absolute z-0 text-3xl font-black text-[#6B7A57] opacity-40">
+                                                                    {item.image.replace('.jpg', '')}
+                                                                </span>
+                                                                {/* الصورة تغطي الرقم إذا تم رفعها */}
                                                                 <img 
-                                                                    src={getImageUrl(item.image)} 
+                                                                    src={item.image} 
                                                                     alt={item.name} 
-                                                                    className="w-full h-full object-cover"
+                                                                    className="w-full h-full object-cover relative z-10 transition-opacity duration-300"
                                                                     loading="lazy" 
-                                                                    onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = 'بدون صورة'; }}
+                                                                    onError={(e) => { e.target.style.opacity = '0'; }}
                                                                 />
                                                             </div>
                                                         </div>
@@ -304,8 +314,16 @@
                                     <div className="p-6 flex-1 overflow-y-auto space-y-5">
                                         {Object.values(cart).map((item) => (
                                             <div key={item.id} className="flex items-center gap-4 border-b border-black/5 pb-5">
-                                                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-black/5 flex items-center justify-center text-[10px] text-black/40">
-                                                    <img src={getImageUrl(item.image)} alt={item.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = 'بدون صورة'; }}/>
+                                                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-white/40 border border-black/5 relative flex items-center justify-center">
+                                                    <span className="absolute z-0 text-xl font-black text-[#6B7A57] opacity-40">
+                                                        {item.image.replace('.jpg', '')}
+                                                    </span>
+                                                    <img 
+                                                        src={item.image} 
+                                                        alt={item.name} 
+                                                        className="w-full h-full object-cover relative z-10" 
+                                                        onError={(e) => { e.target.style.opacity = '0'; }}
+                                                    />
                                                 </div>
                                                 <div className="flex-1">
                                                     <h4 className="font-bold text-sm text-[#1A2012]">{item.name}</h4>
