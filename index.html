@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منيو تونتي يو ار</title>
+    <title>منيو تونتي يو ار | Twenty UR Menu</title>
     <!-- استدعاء خط تجوال -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <!-- استدعاء مكتبات React و Tailwind -->
@@ -31,8 +31,6 @@
         const Truck = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>;
         const Star = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
         const MapPin = ({size=24, fill="none"}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>;
-        const ShoppingBag = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>;
-        const XIcon = ({size=24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
         const THEME = {
             beige: '#F0ECE1',    
@@ -42,55 +40,76 @@
             white: '#FFFFFF',
         };
 
+        // تم إضافة اللغتين لكل قسم
         const CATEGORIES = [
-            { id: 'hot', label: 'مشروبات حارة' },
-            { id: 'drip', label: 'القهوة المقطرة' },
-            { id: 'cold', label: 'مشروبات مثلجة' },
-            { id: 'bakery', label: 'المخبوزات' },
-            { id: 'desserts', label: 'حلى وكعك' }
+            { id: 'hot', labelAr: 'مشروبات حارة', labelEn: 'Hot Drinks' },
+            { id: 'drip', labelAr: 'القهوة المقطرة', labelEn: 'Drip Coffee' },
+            { id: 'cold', labelAr: 'مشروبات مثلجة', labelEn: 'Cold Drinks' },
+            { id: 'refreshing', labelAr: 'المشروبات المنعشة', labelEn: 'Refreshing Drinks' },
+            { id: 'bakery', labelAr: 'المخبوزات', labelEn: 'Bakery' },
+            { id: 'desserts', labelAr: 'حلى وكعك', labelEn: 'Desserts & Cakes' }
         ];
 
+        // تم إضافة الترجمة للأسماء والوصف
         const MENU_ITEMS = [
-            { id: 101, name: 'إسبريسو', description: 'استمتع برشفة مركزة من النكهة الصافية قهوة تحاكي الذوق الرفيع', price: 11, calories: 3, categoryId: 'hot', image: '101.jpg' },
-            { id: 102, name: 'أمريكانو', description: 'قهوة سوداء كلاسيكية', price: 14, calories: 470, categoryId: 'hot', image: '102.jpg' },
-            { id: 103, name: 'كابتشينو', description: '', price: 15, calories: 100, categoryId: 'hot', image: '103.jpg' },
-            { id: 104, name: 'لاتيه', description: '', price: 15, calories: 240, categoryId: 'hot', image: '104.jpg' },
-            { id: 105, name: 'كورتادو', description: '', price: 14, calories: 120, categoryId: 'hot', image: '105.jpg' },
+            { id: 101, nameAr: 'إسبريسو', nameEn: 'Espresso', descriptionAr: 'استمتع برشفة مركزة من النكهة الصافية قهوة تحاكي الذوق الرفيع', descriptionEn: 'Enjoy a concentrated sip of pure flavor, a coffee that mimics refined taste', price: 11, calories: 3, categoryId: 'hot', image: '101.jpg' },
+            { id: 102, nameAr: 'أمريكانو', nameEn: 'Americano', descriptionAr: 'قهوة سوداء كلاسيكية', descriptionEn: 'Classic black coffee', price: 14, calories: 470, categoryId: 'hot', image: '102.jpg' },
+            { id: 103, nameAr: 'كابتشينو', nameEn: 'Cappuccino', descriptionAr: '', descriptionEn: '', price: 15, calories: 100, categoryId: 'hot', image: '103.jpg' },
+            { id: 104, nameAr: 'لاتيه', nameEn: 'Latte', descriptionAr: '', descriptionEn: '', price: 15, calories: 240, categoryId: 'hot', image: '104.jpg' },
+            { id: 105, nameAr: 'كورتادو', nameEn: 'Cortado', descriptionAr: '', descriptionEn: '', price: 14, calories: 120, categoryId: 'hot', image: '105.jpg' },
+            { id: 106, nameAr: 'فلات وايت', nameEn: 'Flat White', descriptionAr: '', descriptionEn: '', price: 15, calories: null, categoryId: 'hot', image: '106.jpg' },
             
-            { id: 1, name: 'قهوة حار V60', description: 'قهوة مختصة مقطرة ساخنة', price: 15, calories: 13, categoryId: 'drip', image: '1.jpg' },
-            { id: 2, name: 'قهوة V60 بارد', description: 'قهوة مختصة مقطرة باردة', price: 16, calories: 13, categoryId: 'drip', image: '2.jpg' },
-            { id: 3, name: 'قهوة اليوم حارة', description: 'محضرة طازجة من محاصيلنا المختارة', price: 9, calories: null, categoryId: 'drip', image: '3.jpg' },
-            { id: 4, name: 'قهوة اليوم بارد', description: 'قهوة اليوم المحضرة باردة', price: 9, calories: null, categoryId: 'drip', image: '4.jpg' },
+            { id: 1, nameAr: 'قهوة حار V60', nameEn: 'Hot V60', descriptionAr: 'قهوة مختصة مقطرة ساخنة', descriptionEn: 'Hot dripped specialty coffee', price: 15, calories: 13, categoryId: 'drip', image: '1.jpg' },
+            { id: 2, nameAr: 'قهوة V60 بارد', nameEn: 'Cold V60', descriptionAr: 'قهوة مختصة مقطرة باردة', descriptionEn: 'Cold dripped specialty coffee', price: 16, calories: 13, categoryId: 'drip', image: '2.jpg' },
+            { id: 3, nameAr: 'قهوة اليوم حارة', nameEn: 'Hot Coffee of the Day', descriptionAr: 'محضرة طازجة من محاصيلنا المختارة', descriptionEn: 'Freshly brewed from our selected beans', price: 9, calories: null, categoryId: 'drip', image: '3.jpg' },
+            { id: 4, nameAr: 'قهوة اليوم بارد', nameEn: 'Cold Coffee of the Day', descriptionAr: 'قهوة اليوم المحضرة باردة', descriptionEn: 'Our daily coffee brewed cold', price: 9, calories: null, categoryId: 'drip', image: '4.jpg' },
             
-            { id: 8, name: 'سبانش لاتيه بارد', description: '', price: 15, calories: 240, categoryId: 'cold', image: '8.jpg' },
-            { id: 9, name: 'سولتد كراميل بارد', description: '', price: 16, calories: 248, categoryId: 'cold', image: '9.jpg' },
+            { id: 8, nameAr: 'سبانش لاتيه بارد', nameEn: 'Iced Spanish Latte', descriptionAr: '', descriptionEn: '', price: 15, calories: 240, categoryId: 'cold', image: '8.jpg' },
+            { id: 9, nameAr: 'سولتد كراميل بارد', nameEn: 'Iced Salted Caramel', descriptionAr: '', descriptionEn: '', price: 16, calories: 248, categoryId: 'cold', image: '9.jpg' },
+            { id: 10, nameAr: 'كولد برو', nameEn: 'Cold Brew', descriptionAr: '', descriptionEn: '', price: 25, calories: null, categoryId: 'cold', image: '10.jpg' },
+            { id: 11, nameAr: 'ماتشا بارد', nameEn: 'Iced Matcha', descriptionAr: '', descriptionEn: '', price: 20, calories: null, categoryId: 'cold', image: '11.jpg' },
+            { id: 12, nameAr: 'امريكانو بارد', nameEn: 'Iced Americano', descriptionAr: '', descriptionEn: '', price: 13, calories: null, categoryId: 'cold', image: '12.jpg' },
+            { id: 13, nameAr: 'لاتيه بارد', nameEn: 'Iced Latte', descriptionAr: '', descriptionEn: '', price: 18, calories: null, categoryId: 'cold', image: '13.jpg' },
+
+            { id: 110, nameAr: 'ايس كركديه', nameEn: 'Iced Hibiscus', descriptionAr: '', descriptionEn: '', price: 15, calories: null, categoryId: 'refreshing', image: '110.jpg' },
+            { id: 111, nameAr: 'سلاش لومي حساوي', nameEn: 'Hassawi Lime Slush', descriptionAr: '', descriptionEn: '', price: 16, calories: null, categoryId: 'refreshing', image: '111.jpg' },
+            { id: 112, nameAr: 'سلاش ريد بول', nameEn: 'Red Bull Slush', descriptionAr: '', descriptionEn: '', price: 25, calories: null, categoryId: 'refreshing', image: '112.jpg' },
+            { id: 113, nameAr: 'ايس تي خوخ', nameEn: 'Peach Iced Tea', descriptionAr: '', descriptionEn: '', price: 16, calories: null, categoryId: 'refreshing', image: '113.jpg' },
+            { id: 114, nameAr: 'ايس تي باشن فروت', nameEn: 'Passion Fruit Iced Tea', descriptionAr: '', descriptionEn: '', price: 16, calories: null, categoryId: 'refreshing', image: '114.jpg' },
+
+            { id: 15, nameAr: 'فرنش توست شوكلت بلجيكي', nameEn: 'Belgian Chocolate French Toast', descriptionAr: 'فرنش توست غني بالشوكولاتة البلجيكية', descriptionEn: 'French toast rich in Belgian chocolate', price: 21, calories: 375, categoryId: 'bakery', image: '15.jpg' },
+            { id: 16, nameAr: 'مكعب فرنش توست بالكاسترد', nameEn: 'Custard French Toast Cube', descriptionAr: 'قطعة بريوش محمرة ومقرمشة ومفرغة من الداخل، محشوة بكريم باتيسيير غني ومزينة بالتوت الطازج.', descriptionEn: 'Toasted brioche cube filled with rich pastry cream and topped with fresh berries.', price: 28, calories: null, categoryId: 'bakery', image: '16.jpg' },
+            { id: 17, nameAr: 'كرواسون اللوز', nameEn: 'Almond Croissant', descriptionAr: 'كروسان لوز هش محشو بكريمة لوز غنية ومزين برقائق اللوز', descriptionEn: 'Flaky almond croissant filled with rich almond cream', price: 14, calories: null, categoryId: 'bakery', image: '17.jpg' },
+            { id: 18, nameAr: 'بان او سويس شوكولاتة', nameEn: 'Pain Suisse au Chocolat', descriptionAr: 'معجنات فرنسية تقليدية محشوة بكاسترد ناعم', descriptionEn: 'Traditional French pastry filled with smooth custard and chocolate', price: 13, calories: null, categoryId: 'bakery', image: '18.jpg' },
+            { id: 19, nameAr: 'دانيش التين والبيكان', nameEn: 'Fig & Pecan Danish', descriptionAr: '', descriptionEn: '', price: 16, calories: null, categoryId: 'bakery', image: '19.jpg' },
             
-            { id: 15, name: 'فرنش توست شوكلت بلجيكي', description: 'فرنش توست غني بالشوكولاتة البلجيكية', price: 21, calories: 375, categoryId: 'bakery', image: '15.jpg' },
-            { id: 16, name: 'مكعب فرنش توست بالكاسترد', description: 'قطعة بريوش محمرة ومقرمشة ومفرغة من الداخل، محشوة بكريم باتيسيير غني ومزينة بالتوت الطازج.', price: 28, calories: null, categoryId: 'bakery', image: '16.jpg' },
-            { id: 17, name: 'كرواسون اللوز', description: 'كروسان لوز هش محشو بكريمة لوز غنية ومزين برقائق اللوز', price: 14, calories: null, categoryId: 'bakery', image: '17.jpg' },
-            { id: 18, name: 'بان او سويس شوكولاتة', description: 'معجنات فرنسية تقليدية محشوة بكاسترد ناعم', price: 13, calories: null, categoryId: 'bakery', image: '18.jpg' },
-            { id: 19, name: 'دانيش التين والبيكان', description: '', price: 16, calories: null, categoryId: 'bakery', image: '19.jpg' },
-            
-            { id: 20, name: 'تشيز كيك مدريد', description: 'مخبوز بلون ذهبي على قاعدة بسكوت', price: 24, calories: 340, categoryId: 'desserts', image: '20.jpg' },
-            { id: 21, name: 'ماتيلدا كلاسيك', description: 'كعكة الشوكولاتة اللذيذة غنيّة بقوام رطب وناعم', price: 20, calories: 544, categoryId: 'desserts', image: '21.jpg' },
-            { id: 22, name: 'تشيز كيك تمر وبيكان', description: 'مخبوز مع توفي وبيكان. يقدم وهو حار مع سايد آيس كريم.', price: 27, calories: null, categoryId: 'desserts', image: '22.jpg' },
-            { id: 23, name: 'كيكة البيكان الفاخرة', description: 'كيكة هشة غنية بالزبدة والبيكان مع طبقة كريمة مخملية ومغلفة بكرانشي البيكان المحمص.', price: 28, calories: null, categoryId: 'desserts', image: '23.jpg' },
-            { id: 24, name: 'تشيز كيك مغطى بالشوكولاتة', description: 'تشيز كيك غني وكريمي، مغطى بالكامل بطبقة من الشوكولاتة الصلبة تتكسر "طقطقة" بالشوكة.', price: 26, calories: null, categoryId: 'desserts', image: '24.jpg' },
-            { id: 30, name: 'كيكة الدولتشي', description: 'كيكة رطبة تذوب في الفم، تتداخل فيها طبقات الكيك المشرب بمرارة القهوة وحلاوة الكراميل.', price: 29, calories: null, categoryId: 'desserts', image: '30.jpg' },
-            { id: 25, name: 'تشيز كيك تيراميسو', description: 'قوام كريمي غني ومتماسك على قاعدة بسكويت كلاسيكية.', price: 26, calories: null, categoryId: 'desserts', image: '25.jpg' },
-            { id: 26, name: 'لوف كيك الماربل', description: '', price: 10, calories: 460, categoryId: 'desserts', image: '26.jpg' },
-            { id: 27, name: 'لوف كيك التوت', description: '', price: 10, calories: 400, categoryId: 'desserts', image: '27.jpg' },
-            { id: 28, name: 'كوكيز', description: '', price: 13, calories: 380, categoryId: 'desserts', image: '28.jpg' },
-            { id: 29, name: 'فكتوريا كيك', description: '', price: 20, calories: 320, categoryId: 'desserts', image: '29.jpg' }
+            { id: 20, nameAr: 'تشيز كيك مدريد', nameEn: 'Madrid Cheesecake', descriptionAr: 'مخبوز بلون ذهبي على قاعدة بسكوت', descriptionEn: 'Baked golden on a biscuit base', price: 24, calories: 340, categoryId: 'desserts', image: '20.jpg' },
+            { id: 21, nameAr: 'ماتيلدا كلاسيك', nameEn: 'Classic Matilda', descriptionAr: 'كعكة الشوكولاتة اللذيذة غنيّة بقوام رطب وناعم', descriptionEn: 'Delicious chocolate cake with a rich and moist texture', price: 20, calories: 544, categoryId: 'desserts', image: '21.jpg' },
+            { id: 22, nameAr: 'تشيز كيك تمر وبيكان', nameEn: 'Date & Pecan Cheesecake', descriptionAr: 'مخبوز مع توفي وبيكان. يقدم وهو حار مع سايد آيس كريم.', descriptionEn: 'Baked with toffee and pecans. Served warm with a side of ice cream.', price: 27, calories: null, categoryId: 'desserts', image: '22.jpg' },
+            { id: 23, nameAr: 'كيكة البيكان الفاخرة', nameEn: 'Premium Pecan Cake', descriptionAr: 'كيكة هشة غنية بالزبدة والبيكان مع طبقة كريمة مخملية ومغلفة بكرانشي البيكان المحمص.', descriptionEn: 'Fluffy butter and pecan cake with a velvety cream layer, covered in crunchy roasted pecans.', price: 28, calories: null, categoryId: 'desserts', image: '23.jpg' },
+            { id: 24, nameAr: 'تشيز كيك مغطى بالشوكولاتة', nameEn: 'Chocolate Covered Cheesecake', descriptionAr: 'تشيز كيك غني وكريمي، مغطى بالكامل بطبقة من الشوكولاتة الصلبة تتكسر "طقطقة" بالشوكة.', descriptionEn: 'Rich and creamy cheesecake, fully covered with a hard chocolate shell that snaps with a fork.', price: 26, calories: null, categoryId: 'desserts', image: '24.jpg' },
+            { id: 30, nameAr: 'كيكة الدولتشي', nameEn: 'Dolce Cake', descriptionAr: 'كيكة رطبة تذوب في الفم، تتداخل فيها طبقات الكيك المشرب بمرارة القهوة وحلاوة الكراميل.', descriptionEn: 'A moist melt-in-your-mouth cake, intertwining layers of coffee-soaked sponge and sweet caramel.', price: 29, calories: null, categoryId: 'desserts', image: '30.jpg' },
+            { id: 25, nameAr: 'تشيز كيك تيراميسو', nameEn: 'Tiramisu Cheesecake', descriptionAr: 'قوام كريمي غني ومتماسك على قاعدة بسكويت كلاسيكية.', descriptionEn: 'Rich and firm creamy texture on a classic biscuit base.', price: 26, calories: null, categoryId: 'desserts', image: '25.jpg' },
+            { id: 26, nameAr: 'لوف كيك الماربل', nameEn: 'Marble Loaf Cake', descriptionAr: '', descriptionEn: '', price: 10, calories: 460, categoryId: 'desserts', image: '26.jpg' },
+            { id: 27, nameAr: 'لوف كيك التوت', nameEn: 'Berry Loaf Cake', descriptionAr: '', descriptionEn: '', price: 10, calories: 400, categoryId: 'desserts', image: '27.jpg' },
+            { id: 28, nameAr: 'كوكيز', nameEn: 'Cookies', descriptionAr: '', descriptionEn: '', price: 13, calories: 380, categoryId: 'desserts', image: '28.jpg' },
+            { id: 29, nameAr: 'فكتوريا كيك', nameEn: 'Victoria Cake', descriptionAr: '', descriptionEn: '', price: 20, calories: 320, categoryId: 'desserts', image: '29.jpg' }
         ];
 
         function App() {
             const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].id);
-            const [cart, setCart] = useState({});
-            const [isCartOpen, setIsCartOpen] = useState(false);
+            const [language, setLanguage] = useState('ar');
             const [imageErrors, setImageErrors] = useState({}); 
             
             const pillsContainerRef = useRef(null);
+            
+            const isAr = language === 'ar';
+
+            // تحديث اتجاه الصفحة عند تغيير اللغة
+            useEffect(() => {
+                document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+                document.documentElement.lang = isAr ? 'ar' : 'en';
+            }, [isAr]);
 
             useEffect(() => {
                 const handleScroll = () => {
@@ -134,68 +153,53 @@
                 }
             };
 
-            const updateCart = (item, change) => {
-                setCart((prev) => {
-                    const currentQty = prev[item.id]?.quantity || 0;
-                    const newQty = currentQty + change;
-                    if (newQty <= 0) {
-                        const newCart = { ...prev };
-                        delete newCart[item.id];
-                        return newCart;
-                    }
-                    return { ...prev, [item.id]: { ...item, quantity: newQty } };
-                });
+            const toggleLanguage = () => {
+                setLanguage(prev => prev === 'ar' ? 'en' : 'ar');
             };
 
             const handleImageError = (imageId) => {
                 setImageErrors(prev => ({ ...prev, [imageId]: true }));
             };
 
-            // =========================================================
-            // التعديل هنا: تم إضافة اسم المجلد 'images/' قبل مسار الصورة
-            // =========================================================
             const getImageUrl = (imagePath) => {
                 return `images/${imagePath}`;
             };
 
-            const cartItemsCount = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-            const cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
             return (
                 <div className="text-[#1A2012] selection:bg-[#6B7A57] selection:text-white pb-10">
-                    <div className="max-w-md mx-auto relative min-h-screen flex flex-col bg-[#F0ECE1] shadow-xl">
+                    <div className="max-w-md mx-auto relative min-h-screen flex flex-col bg-[#F0ECE1] shadow-xl" dir={isAr ? "rtl" : "ltr"}>
                         
                         {/* --- الهيدر --- */}
                         <header className="pt-8 px-5 flex flex-col relative z-0">
-                            <div className="flex justify-start">
+                            <div className={`flex ${isAr ? 'justify-start' : 'justify-end'}`}>
                                 <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shadow-sm border-2 border-[#F0ECE1] bg-[#6B7A57]">
                                     {!imageErrors['0'] ? (
                                         <img 
                                             src={getImageUrl('0.jpg')} 
-                                            alt="شعار" 
+                                            alt="Logo" 
                                             className="w-full h-full object-cover" 
                                             onError={() => handleImageError('0')}
                                         />
                                     ) : (
-                                        <span className="text-sm font-bold text-white">شعار</span>
+                                        <span className="text-xs font-bold text-white">{isAr ? 'شعار' : 'Logo'}</span>
                                     )}
                                 </div>
                             </div>
 
                             <h1 className="text-[4rem] font-black text-center mt-2 tracking-tighter text-[#6B7A57]">
-                                تونتي يو ار
+                                {isAr ? 'تونتي يو ار' : 'Twenty UR'}
                             </h1>
 
-                            <div className="flex justify-end mt-4 items-center gap-1.5 font-bold text-sm">
+                            <button onClick={toggleLanguage} className="flex justify-end mt-4 items-center gap-1.5 font-bold text-sm bg-transparent border-none outline-none cursor-pointer text-[#1A2012] hover:opacity-70 transition-opacity">
                                 <ChevronDown size={16} />
-                                <span>Arabic</span>
+                                <span>{isAr ? 'English' : 'عربي'}</span>
                                 <Globe size={16} />
-                            </div>
+                            </button>
 
                             <div className="text-center mt-6 flex flex-col items-center">
                                 <div className="text-xl font-bold flex items-center gap-2 text-[#6B7A57]">
                                     <ChevronDown size={20} />
-                                    تونتي يو ار
+                                    {isAr ? 'تونتي يو ار' : 'Twenty UR'}
                                 </div>
                                 <div className="flex justify-center gap-6 mt-4 mb-8 text-black">
                                     <Truck size={22} fill="currentColor" />
@@ -221,7 +225,7 @@
                                                 color: isActive ? THEME.darkText : THEME.white,
                                             }}
                                         >
-                                            {cat.label}
+                                            {isAr ? cat.labelAr : cat.labelEn}
                                         </button>
                                     );
                                 })}
@@ -229,7 +233,7 @@
                         </div>
 
                         {/* --- قائمة المنتجات --- */}
-                        <main className="flex-1 rounded-t-[2.5rem] px-5 pt-8 pb-32 z-20 relative mt-4 bg-[#6B7A57]">
+                        <main className="flex-1 rounded-t-[2.5rem] px-5 pt-8 pb-10 z-20 relative mt-4 bg-[#6B7A57]">
                             <div className="w-12 h-1 rounded-full mx-auto mb-10 bg-black opacity-30"></div>
 
                             <div className="space-y-16">
@@ -239,34 +243,29 @@
 
                                     return (
                                         <section key={category.id} id={`section-${category.id}`} className="scroll-mt-48">
-                                            <h2 className="text-[1.6rem] font-bold mb-8 pr-1 text-[#1A2012]">
-                                                {category.label}
+                                            <h2 className={`text-[1.6rem] font-bold mb-8 ${isAr ? 'pr-1' : 'pl-1'} text-[#1A2012]`}>
+                                                {isAr ? category.labelAr : category.labelEn}
                                             </h2>
 
                                             <div className="space-y-10">
                                                 {categoryItems.map((item) => {
-                                                    const qty = cart[item.id]?.quantity || 0;
+                                                    const itemName = isAr ? item.nameAr : item.nameEn;
+                                                    const itemDesc = isAr ? item.descriptionAr : item.descriptionEn;
+
                                                     return (
                                                         <div key={item.id} className="flex items-start justify-between gap-4">
                                                             {/* التفاصيل */}
                                                             <div className="flex-1 pt-1 flex flex-col h-full">
-                                                                <h3 className="text-xl font-bold mb-1 text-[#1A2012]">{item.name}</h3>
-                                                                {item.description && <p className="text-[13px] leading-snug mb-3 opacity-80 font-medium text-[#1A2012]">{item.description}</p>}
-                                                                {item.calories && <p className="text-[13px] mb-4 font-bold text-[#1A2012]">{item.calories} سعرة حرارية</p>}
+                                                                <h3 className="text-xl font-bold mb-1 text-[#1A2012]">{itemName}</h3>
+                                                                {itemDesc && <p className="text-[13px] leading-snug mb-3 opacity-80 font-medium text-[#1A2012]">{itemDesc}</p>}
+                                                                {item.calories && <p className="text-[13px] mb-4 font-bold text-[#1A2012]">{item.calories} {isAr ? 'سعرة حرارية' : 'Calories'}</p>}
                                                                 
+                                                                {/* زر السعر (للعرض فقط) */}
                                                                 <div className="mt-auto pt-2">
-                                                                    {qty === 0 ? (
-                                                                        <button onClick={() => updateCart(item, 1)} className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[0.4rem] font-bold shadow-sm active:scale-95 transition-transform text-black">
-                                                                            <span className="text-xs pt-0.5 opacity-80">﷼</span>
-                                                                            <span className="font-sans text-[15px]">{item.price}.00</span>
-                                                                        </button>
-                                                                    ) : (
-                                                                        <div className="inline-flex items-center gap-4 bg-white rounded-[0.4rem] p-1 px-2 shadow-sm">
-                                                                            <button onClick={() => updateCart(item, 1)} className="w-6 h-6 flex items-center justify-center font-bold text-lg text-black">+</button>
-                                                                            <span className="font-bold text-sm text-black w-4 text-center">{qty}</span>
-                                                                            <button onClick={() => updateCart(item, -1)} className="w-6 h-6 flex items-center justify-center font-bold text-lg text-black">-</button>
-                                                                        </div>
-                                                                    )}
+                                                                    <div className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[0.4rem] font-bold shadow-sm text-black">
+                                                                        <span className="font-sans text-[15px]">{item.price}</span>
+                                                                        <span className="text-xs opacity-90">{isAr ? 'ريال' : 'SAR'}</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -275,7 +274,7 @@
                                                                 {!imageErrors[item.id] ? (
                                                                     <img 
                                                                         src={getImageUrl(item.image)} 
-                                                                        alt={item.name} 
+                                                                        alt={itemName} 
                                                                         className="w-full h-full object-cover mix-blend-multiply relative z-10"
                                                                         loading="lazy" 
                                                                         onError={() => handleImageError(item.id)}
@@ -295,69 +294,7 @@
                                 })}
                             </div>
                         </main>
-
-                        {/* --- زر السلة العائم --- */}
-                        {cartItemsCount > 0 && (
-                            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-[380px] z-40">
-                                <button onClick={() => setIsCartOpen(true)} className="w-full text-white p-4 rounded-2xl flex items-center justify-between shadow-2xl active:scale-95 transition-transform bg-black">
-                                    <div className="flex items-center gap-3">
-                                        <div className="relative">
-                                            <ShoppingBag size={24} />
-                                            <span className="absolute -top-1.5 -right-1.5 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-black bg-[#6B7A57] text-[#1A2012]">
-                                                {cartItemsCount}
-                                            </span>
-                                        </div>
-                                        <span className="font-bold">عرض السلة</span>
-                                    </div>
-                                    <div className="font-bold text-lg font-sans">{cartTotal}.00 ﷼</div>
-                                </button>
-                            </div>
-                        )}
-
-                        {/* --- نافذة السلة --- */}
-                        {isCartOpen && (
-                            <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm">
-                                <div className="w-full max-w-md mx-auto rounded-t-[2.5rem] min-h-[50vh] max-h-[85vh] flex flex-col bg-[#F0ECE1]">
-                                    <div className="flex items-center justify-between p-6 border-b border-black/10">
-                                        <h2 className="font-bold text-xl flex items-center gap-2 text-[#1A2012]">سلة الطلبات</h2>
-                                        <button onClick={() => setIsCartOpen(false)} className="p-2 bg-black/5 rounded-full text-black"><XIcon size={20} /></button>
-                                    </div>
-
-                                    <div className="p-6 flex-1 overflow-y-auto space-y-5">
-                                        {Object.values(cart).map((item) => (
-                                            <div key={item.id} className="flex items-center gap-4 border-b border-black/5 pb-5">
-                                                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-white/40 flex items-center justify-center relative">
-                                                    {!imageErrors[item.id] ? (
-                                                        <img src={getImageUrl(item.image)} alt={item.name} className="w-full h-full object-cover mix-blend-multiply relative z-10" onError={() => handleImageError(item.id)} />
-                                                    ) : (
-                                                        <span className="text-xl font-black text-[#6B7A57] opacity-60 absolute z-0">{item.image.replace('.jpg', '')}</span>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h4 className="font-bold text-sm text-[#1A2012]">{item.name}</h4>
-                                                    <div className="font-bold text-sm mt-1 font-sans text-[#6B7A57]">{item.price * item.quantity} ﷼</div>
-                                                </div>
-                                                <div className="flex items-center gap-2 bg-white rounded-xl p-1 border border-black/5">
-                                                    <button onClick={() => updateCart(item, 1)} className="w-7 h-7 flex items-center justify-center font-bold">+</button>
-                                                    <span className="font-bold text-xs w-3 text-center">{item.quantity}</span>
-                                                    <button onClick={() => updateCart(item, -1)} className="w-7 h-7 flex items-center justify-center font-bold">-</button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="p-6 border-t border-black/10 rounded-t-3xl pb-8 bg-[#6B7A57]">
-                                        <div className="flex justify-between items-center mb-5 px-2 text-[#1A2012]">
-                                            <span className="font-bold">المجموع النهائي</span>
-                                            <span className="font-extrabold text-2xl font-sans">{cartTotal} ﷼</span>
-                                        </div>
-                                        <button onClick={() => alert('تم تأكيد الطلب بنجاح!')} className="w-full text-white font-bold py-4 rounded-2xl flex items-center justify-center text-lg active:scale-95 bg-black">
-                                            تأكيد وإرسال الطلب
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        
                     </div>
                 </div>
             );
@@ -368,5 +305,3 @@
     </script>
 </body>
 </html>
-
-
